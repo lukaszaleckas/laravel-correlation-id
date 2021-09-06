@@ -13,6 +13,9 @@ class CorrelationIdService
     /** @var string */
     private $logContextKey;
 
+    /** @var string */
+    private $requestHeaderName;
+
     /**
      * @return void
      */
@@ -20,6 +23,7 @@ class CorrelationIdService
     {
         $this->currentCorrelationId = null;
         $this->logContextKey        = config('correlation_id.log_context_key');
+        $this->requestHeaderName    = config('correlation_id.header_name');
     }
 
     /**
@@ -50,12 +54,28 @@ class CorrelationIdService
     }
 
     /**
+     * @return string
+     */
+    public function getLogContextKey(): string
+    {
+        return $this->logContextKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRequestHeaderName()
+    {
+        return $this->requestHeaderName;
+    }
+
+    /**
      * @return void
      */
     private function updateLogContext(): void
     {
         Log::withContext([
-            $this->logContextKey => $this->getCurrentCorrelationId()
+            $this->getLogContextKey() => $this->getCurrentCorrelationId()
         ]);
     }
 }
