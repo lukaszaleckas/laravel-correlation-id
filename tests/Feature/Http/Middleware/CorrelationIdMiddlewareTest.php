@@ -3,22 +3,15 @@
 namespace LaravelCorrelationId\Tests\Feature\Http\Middleware;
 
 use Exception;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use LaravelCorrelationId\CorrelationIdService;
 use LaravelCorrelationId\Http\Middleware\CorrelationIdMiddleware;
 use LaravelCorrelationId\Tests\AbstractTest;
 
 class CorrelationIdMiddlewareTest extends AbstractTest
 {
-    use WithFaker;
-
     /** @var CorrelationIdMiddleware */
     private $middleware;
-
-    /** @var string */
-    private $headerName;
 
     /**
      * @return void
@@ -26,10 +19,6 @@ class CorrelationIdMiddlewareTest extends AbstractTest
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->headerName = $this->faker->word;
-
-        Config::set('correlation_id.header_name', $this->headerName);
 
         $this->middleware = app(CorrelationIdMiddleware::class);
     }
