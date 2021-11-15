@@ -45,10 +45,38 @@ class JobDispatcherTest extends AbstractTest
     /**
      * @return void
      */
-    public function testSetsJobCorrelationId(): void
+    public function testSetsJobCorrelationIdOnDispatch(): void
     {
         $this->jobDispatcher->dispatch($this->job);
 
+        $this->assertCorrelationIdWasSet();
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetsJobCorrelationIdOnSynchronousDispatch(): void
+    {
+        $this->jobDispatcher->dispatchSync($this->job);
+
+        $this->assertCorrelationIdWasSet();
+    }
+
+    /**
+     * @return void
+     */
+    public function testSetsJobCorrelationIdWhenDispatchingNow(): void
+    {
+        $this->jobDispatcher->dispatchNow($this->job);
+
+        $this->assertCorrelationIdWasSet();
+    }
+
+    /**
+     * @return void
+     */
+    private function assertCorrelationIdWasSet(): void
+    {
         self::assertEquals(
             $this->correlationIdService->getCurrentCorrelationId(),
             $this->job->getCorrelationId()

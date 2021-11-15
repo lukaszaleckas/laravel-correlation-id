@@ -26,14 +26,35 @@ class JobDispatcher extends Dispatcher
      * @param mixed $command
      * @return mixed
      */
-    public function dispatch($command)
+    public function dispatchToQueue($command)
+    {
+        $this->handleCorrelationId($command);
+
+        return parent::dispatchToQueue($command);
+    }
+
+    /**
+     * @param mixed $command
+     * @param mixed $handler
+     * @return mixed
+     */
+    public function dispatchNow($command, $handler = null)
+    {
+        $this->handleCorrelationId($command);
+
+        return parent::dispatchNow($command, $handler);
+    }
+
+    /**
+     * @param mixed $command
+     * @return void
+     */
+    private function handleCorrelationId($command): void
     {
         if ($command instanceof AbstractCorrelatableJob) {
             $command->setCorrelationId(
                 $this->correlationIdService->getCurrentCorrelationId()
             );
         }
-
-        return parent::dispatch($command);
     }
 }
