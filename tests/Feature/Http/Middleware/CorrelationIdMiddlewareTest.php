@@ -35,8 +35,8 @@ class CorrelationIdMiddlewareTest extends AbstractTest
         });
 
         self::assertEquals(
-            $request->header($this->headerName, ''),
-            app(CorrelationIdService::class)->getCurrentCorrelationId()
+            app(CorrelationIdService::class)->getCurrentCorrelationId(),
+            $request->header($this->headerName, '')
         );
     }
 
@@ -58,7 +58,7 @@ class CorrelationIdMiddlewareTest extends AbstractTest
 
         self::assertEquals(
             $correlationId,
-            $request->header($this->headerName)
+            app(CorrelationIdService::class)->getCurrentCorrelationId()
         );
     }
 }
