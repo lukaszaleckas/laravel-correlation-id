@@ -29,11 +29,10 @@ class CorrelationIdMiddleware
         $headerName = $this->correlationIdService->getRequestHeaderName();
 
         if (!$request->hasHeader($headerName)) {
-            $correlationId = $this->correlationIdService->generateCorrelationId();
-            $this->correlationIdService->setCurrentCorrelationId($correlationId);
-
-            $request->headers->set($headerName, $correlationId);
+            $request->headers->set($headerName, $this->correlationIdService->generateCorrelationId());
         }
+
+        $this->correlationIdService->setCurrentCorrelationId($request->headers->get($headerName));
 
         return $next($request);
     }
