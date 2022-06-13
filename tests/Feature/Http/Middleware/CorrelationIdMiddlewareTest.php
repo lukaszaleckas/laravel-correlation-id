@@ -29,15 +29,14 @@ class CorrelationIdMiddlewareTest extends AbstractTest
      */
     public function testAddsCorrelationIdToRequestIfNotPresent(): void
     {
-        $request = new Request();
-        $this->middleware->handle($request, function ($request) {
+        $request               = new Request();
+        $response              = $this->middleware->handle($request, function ($request) {
             return $request;
         });
+        $expectedCorrelationId = app(CorrelationIdService::class)->getCurrentCorrelationId();
 
-        self::assertEquals(
-            app(CorrelationIdService::class)->getCurrentCorrelationId(),
-            $request->header($this->headerName, '')
-        );
+        self::assertEquals($expectedCorrelationId, $request->header($this->headerName));
+        self::assertEquals($expectedCorrelationId, $response->header($this->headerName));
     }
 
     /**
@@ -52,13 +51,12 @@ class CorrelationIdMiddlewareTest extends AbstractTest
             $this->headerName,
             $correlationId
         );
-        $this->middleware->handle($request, function ($request) {
+        $response              = $this->middleware->handle($request, function ($request) {
             return $request;
         });
+        $expectedCorrelationId = app(CorrelationIdService::class)->getCurrentCorrelationId();
 
-        self::assertEquals(
-            $correlationId,
-            app(CorrelationIdService::class)->getCurrentCorrelationId()
-        );
+        self::assertEquals($correlationId, $expectedCorrelationId);
+        self::assertEquals($expectedCorrelationId, $response->header($this->headerName));
     }
 }
