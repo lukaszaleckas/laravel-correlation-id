@@ -14,7 +14,7 @@ class CorrelationIdService
     private $logContextKey;
 
     /** @var string */
-    private $requestHeaderName;
+    private $httpHeaderName;
 
     /**
      * @return void
@@ -23,7 +23,7 @@ class CorrelationIdService
     {
         $this->currentCorrelationId = null;
         $this->logContextKey        = config('correlation_id.log_context_key');
-        $this->requestHeaderName    = config('correlation_id.header_name');
+        $this->httpHeaderName       = config('correlation_id.header_name');
     }
 
     /**
@@ -64,9 +64,9 @@ class CorrelationIdService
     /**
      * @return string
      */
-    public function getRequestHeaderName()
+    public function getHttpHeaderName(): string
     {
-        return $this->requestHeaderName;
+        return $this->httpHeaderName;
     }
 
     /**

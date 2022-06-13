@@ -26,14 +26,18 @@ class CorrelationIdMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        $headerName = $this->correlationIdService->getRequestHeaderName();
+        $headerName = $this->correlationIdService->getHttpHeaderName();
 
         if (!$request->hasHeader($headerName)) {
             $request->headers->set($headerName, $this->correlationIdService->generateCorrelationId());
         }
+        
+        $currentCorrelationId = $request->headers->get($headerName);
+        $this->correlationIdService->setCurrentCorrelationId($currentCorrelationId);
 
-        $this->correlationIdService->setCurrentCorrelationId($request->headers->get($headerName));
+        $response = $next($request);
+        $response->headers->set($headerName, $currentCorrelationId);
 
-        return $next($request);
+        return $response;
     }
 }

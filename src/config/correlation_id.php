@@ -2,8 +2,12 @@
 
 return [
     /*
-     * Request's header name. If request includes this header, specified correlation ID will be
+     * Http header name.
+     *
+     * In case of request: if it includes this header, specified correlation ID will be
      * saved for the current request / job lifecycle, if not - random uuid will be generated.
+     *
+     * In case of response: it will include this header with correlation ID.
      */
     'header_name'     => env('CORRELATION_ID_HEADER_NAME', 'X-CORRELATION-ID'),
 
