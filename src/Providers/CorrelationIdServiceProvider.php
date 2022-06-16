@@ -28,10 +28,7 @@ class CorrelationIdServiceProvider extends ServiceProvider
         $this->app->extend(
             Dispatcher::class,
             function ($service, $app) {
-                return new JobDispatcher(
-                    $app->make(CorrelationIdService::class),
-                    $service
-                );
+                return new JobDispatcher($service);
             }
         );
     }

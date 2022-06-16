@@ -3,28 +3,23 @@
 namespace LaravelCorrelationId;
 
 use Illuminate\Bus\Dispatcher;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use LaravelCorrelationId\Jobs\Contracts\AbstractCorrelatableJob;
 
 class JobDispatcher extends Dispatcher
 {
-    /** @var CorrelationIdService */
-    private $correlationIdService;
-
     /**
-     * @param CorrelationIdService $correlationIdService
-     * @param Dispatcher           $dispatcher
+     * @param Dispatcher $dispatcher
      */
-    public function __construct(
-        CorrelationIdService $correlationIdService,
-        Dispatcher $dispatcher
-    ) {
-        $this->correlationIdService = $correlationIdService;
+    public function __construct(Dispatcher $dispatcher)
+    {
         parent::__construct($dispatcher->container, $dispatcher->queueResolver);
     }
 
     /**
      * @param mixed $command
      * @return mixed
+     * @throws BindingResolutionException
      */
     public function dispatchToQueue($command)
     {
@@ -37,6 +32,7 @@ class JobDispatcher extends Dispatcher
      * @param mixed $command
      * @param mixed $handler
      * @return mixed
+     * @throws BindingResolutionException
      */
     public function dispatchNow($command, $handler = null)
     {
@@ -48,13 +44,23 @@ class JobDispatcher extends Dispatcher
     /**
      * @param mixed $command
      * @return void
+     * @throws BindingResolutionException
      */
     private function handleCorrelationId($command): void
     {
         if ($command instanceof AbstractCorrelatableJob) {
             $command->setCorrelationId(
-                $this->correlationIdService->getCurrentCorrelationId()
+                $this->getCorrelationIdService()->getCurrentCorrelationId()
             );
         }
+    }
+
+    /**
+     * @return CorrelationIdService
+     * @throws BindingResolutionException
+     */
+    private function getCorrelationIdService(): CorrelationIdService
+    {
+        return $this->container->make(CorrelationIdService::class);
     }
 }

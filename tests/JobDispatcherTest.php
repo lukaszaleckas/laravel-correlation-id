@@ -3,6 +3,8 @@
 namespace LaravelCorrelationId\Tests;
 
 use Illuminate\Bus\Dispatcher;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Queue;
 use LaravelCorrelationId\CorrelationIdService;
 use LaravelCorrelationId\JobDispatcher;
 use LaravelCorrelationId\Jobs\Contracts\AbstractCorrelatableJob;
@@ -54,6 +56,19 @@ class JobDispatcherTest extends AbstractTest
 
     /**
      * @return void
+     * @throws BindingResolutionException
+     */
+    public function testSetsJobCorrelationIdOnDispatchToQueue(): void
+    {
+        Queue::fake();
+
+        $this->jobDispatcher->dispatchToQueue($this->job);
+
+        $this->assertCorrelationIdWasSet();
+    }
+
+    /**
+     * @return void
      */
     public function testSetsJobCorrelationIdOnSynchronousDispatch(): void
     {
@@ -64,12 +79,35 @@ class JobDispatcherTest extends AbstractTest
 
     /**
      * @return void
+     * @throws BindingResolutionException
      */
     public function testSetsJobCorrelationIdWhenDispatchingNow(): void
     {
         $this->jobDispatcher->dispatchNow($this->job);
 
         $this->assertCorrelationIdWasSet();
+    }
+
+    /**
+     * @return void
+     */
+    public function testRefreshesServiceAfterFlushingScopedInstances(): void
+    {
+        $this->app->forgetScopedInstances();
+
+        /** @var CorrelationIdService $correlationIdService */
+        $correlationIdService = app(CorrelationIdService::class);
+
+        $correlationIdService->setCurrentCorrelationId(
+            $correlationIdService->generateCorrelationId()
+        );
+
+        $this->jobDispatcher->dispatch($this->job);
+
+        self::assertEquals(
+            $correlationIdService->getCurrentCorrelationId(),
+            $this->job->getCorrelationId()
+        );
     }
 
     /**
