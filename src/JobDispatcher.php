@@ -4,7 +4,8 @@ namespace LaravelCorrelationId;
 
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use LaravelCorrelationId\Jobs\Contracts\AbstractCorrelatableJob;
+use LaravelCorrelationId\Jobs\Traits\RecallsCorrelationId;
+use LaravelCorrelationId\Utils\Helpers;
 
 class JobDispatcher extends Dispatcher
 {
@@ -21,7 +22,7 @@ class JobDispatcher extends Dispatcher
      * @return mixed
      * @throws BindingResolutionException
      */
-    public function dispatchToQueue($command)
+    public function dispatchToQueue(mixed $command): mixed
     {
         $this->handleCorrelationId($command);
 
@@ -34,7 +35,7 @@ class JobDispatcher extends Dispatcher
      * @return mixed
      * @throws BindingResolutionException
      */
-    public function dispatchNow($command, $handler = null)
+    public function dispatchNow(mixed $command, mixed $handler = null): mixed
     {
         $this->handleCorrelationId($command);
 
@@ -46,9 +47,9 @@ class JobDispatcher extends Dispatcher
      * @return void
      * @throws BindingResolutionException
      */
-    private function handleCorrelationId($command): void
+    private function handleCorrelationId(mixed $command): void
     {
-        if ($command instanceof AbstractCorrelatableJob) {
+        if (Helpers::hasTrait($command, RecallsCorrelationId::class)) {
             $command->setCorrelationId(
                 $this->getCorrelationIdService()->getCurrentCorrelationId()
             );

@@ -12,7 +12,7 @@ COPY . /app/
 
 RUN composer dump-autoload --optimize --classmap-authoritative
 
-FROM php:7.3-cli as base
+FROM php:8.1-cli as base
 
 # Install PECL and PEAR extensions
 RUN pecl install xdebug

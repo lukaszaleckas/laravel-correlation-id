@@ -2,37 +2,12 @@
 
 namespace LaravelCorrelationId\Jobs\Contracts;
 
-use LaravelCorrelationId\Jobs\Middleware\RecallCorrelationIdMiddleware;
+use LaravelCorrelationId\Jobs\Traits\RecallsCorrelationId;
 
+/**
+ * @deprecated Add the RecallsCorrelationId trait to your job instead.
+ */
 abstract class AbstractCorrelatableJob
 {
-    /** @var string|null */
-    protected $correlationId = null;
-
-    /**
-     * @return string[]
-     */
-    public function middleware(): array
-    {
-        return [
-            RecallCorrelationIdMiddleware::class
-        ];
-    }
-
-    /**
-     * @param string|null $correlationId
-     * @return void
-     */
-    public function setCorrelationId(?string $correlationId): void
-    {
-        $this->correlationId = $correlationId;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCorrelationId(): ?string
-    {
-        return $this->correlationId;
-    }
+    use RecallsCorrelationId;
 }
