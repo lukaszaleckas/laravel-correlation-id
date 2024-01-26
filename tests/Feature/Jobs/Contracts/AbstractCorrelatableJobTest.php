@@ -3,7 +3,7 @@
 namespace LaravelCorrelationId\Tests\Feature\Jobs\Contracts;
 
 use LaravelCorrelationId\Jobs\Contracts\AbstractCorrelatableJob;
-use LaravelCorrelationId\Jobs\Middleware\RecallCorrelationIdMiddleware;
+use LaravelCorrelationId\Jobs\Traits\RecallsCorrelationId;
 use LaravelCorrelationId\Tests\AbstractTest;
 
 class AbstractCorrelatableJobTest extends AbstractTest
@@ -11,14 +11,14 @@ class AbstractCorrelatableJobTest extends AbstractTest
     /**
      * @return void
      */
-    public function testIncludesMiddleware(): void
+    public function testIncludesTrait(): void
     {
         $job = new class extends AbstractCorrelatableJob{
         };
 
-        self::assertEquals(
-            [RecallCorrelationIdMiddleware::class],
-            $job->middleware()
+        self::assertContains(
+            RecallsCorrelationId::class,
+            class_uses_recursive($job)
         );
     }
 }

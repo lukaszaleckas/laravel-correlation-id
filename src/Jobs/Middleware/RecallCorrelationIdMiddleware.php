@@ -5,10 +5,13 @@ namespace LaravelCorrelationId\Jobs\Middleware;
 use LaravelCorrelationId\CorrelationIdService;
 use LaravelCorrelationId\Jobs\Contracts\AbstractCorrelatableJob;
 
+/**
+ * @deprecated This logic is handled by the event listener in the package's service provider.
+ */
 class RecallCorrelationIdMiddleware
 {
     /** @var CorrelationIdService */
-    private $correlationIdService;
+    private CorrelationIdService $correlationIdService;
 
     /**
      * @param CorrelationIdService $correlationIdService
@@ -23,7 +26,7 @@ class RecallCorrelationIdMiddleware
      * @param mixed $next
      * @return mixed
      */
-    public function handle($job, $next)
+    public function handle(mixed $job, mixed $next): mixed
     {
         if ($job instanceof AbstractCorrelatableJob) {
             $this->correlationIdService->setCurrentCorrelationId(
