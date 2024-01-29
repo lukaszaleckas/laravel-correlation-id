@@ -42,6 +42,12 @@ class CorrelationIdService
      */
     public function getCurrentCorrelationId(): ?string
     {
+        if ($this->currentCorrelationId === null) {
+            $this->setCurrentCorrelationId(
+                $this->generateCorrelationId()
+            );
+        }
+
         return $this->currentCorrelationId;
     }
 
