@@ -9,7 +9,7 @@ specified in config), and appended to every log context.
 ## Installation
 
 1. Run `composer require lukaszaleckas/laravel-correlation-id`
-2. Publish `correlation_id.php` config: `php artisan vendor:publish --tag=laravel-correlation-id`
+2. (optional) Publish `correlation_id.php` config: `php artisan vendor:publish --tag=laravel-correlation-id` if you want to customize the default parameters
 3. (optional) Add `LaravelCorrelationId\Jobs\Traits\RecallsCorrelationId` trait to your jobs
 if you want correlation id to be automatically saved on job dispatch and recalled before
 it is handled / processed.
