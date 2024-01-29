@@ -7,14 +7,17 @@ use Illuminate\Support\Str;
 
 class CorrelationIdService
 {
+    private const DEFAULT_LOG_CONTEXT_KEY  = 'correlation_id';
+    private const DEFAULT_HTTP_HEADER_NAME = 'X-CORRELATION-ID';
+
     /** @var string|null */
-    private $currentCorrelationId;
+    private ?string $currentCorrelationId;
 
     /** @var string */
-    private $logContextKey;
+    private string $logContextKey;
 
     /** @var string */
-    private $httpHeaderName;
+    private string $httpHeaderName;
 
     /**
      * @return void
@@ -22,8 +25,8 @@ class CorrelationIdService
     public function __construct()
     {
         $this->currentCorrelationId = null;
-        $this->logContextKey        = config('correlation_id.log_context_key');
-        $this->httpHeaderName       = config('correlation_id.header_name');
+        $this->logContextKey        = config('correlation_id.log_context_key', self::DEFAULT_LOG_CONTEXT_KEY);
+        $this->httpHeaderName       = config('correlation_id.header_name', self::DEFAULT_HTTP_HEADER_NAME);
     }
 
     /**
@@ -39,6 +42,12 @@ class CorrelationIdService
      */
     public function getCurrentCorrelationId(): ?string
     {
+        if ($this->currentCorrelationId === null) {
+            $this->setCurrentCorrelationId(
+                $this->generateCorrelationId()
+            );
+        }
+
         return $this->currentCorrelationId;
     }
 
