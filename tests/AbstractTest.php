@@ -17,19 +17,21 @@ abstract class AbstractTest extends TestCase
     /** @var string */
     protected $logContextKey;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->app->register(CorrelationIdServiceProvider::class);
 
         $this->headerName    = $this->faker->word;
         $this->logContextKey = $this->faker->word;
 
         Config::set('correlation_id.header_name', $this->headerName);
         Config::set('correlation_id.log_context_key', $this->logContextKey);
+    }
+
+    protected function getPackageProviders($app): array
+    {
+        return [
+            CorrelationIdServiceProvider::class
+        ];
     }
 }

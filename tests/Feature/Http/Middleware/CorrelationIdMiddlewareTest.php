@@ -13,9 +13,6 @@ class CorrelationIdMiddlewareTest extends AbstractTest
     /** @var CorrelationIdMiddleware */
     private $middleware;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();

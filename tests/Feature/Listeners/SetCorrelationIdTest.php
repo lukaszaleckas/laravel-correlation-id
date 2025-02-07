@@ -10,16 +10,15 @@ use Illuminate\Support\Facades\Event;
 use LaravelCorrelationId\CorrelationIdService;
 use LaravelCorrelationId\Listeners\SetCorrelationId;
 use LaravelCorrelationId\Tests\AbstractTest;
+use LaravelCorrelationId\Tests\Helpers\JobMocker;
 use LaravelCorrelationId\Tests\Stubs\CommandWithTraitStub;
 use Mockery\MockInterface;
 
 class SetCorrelationIdTest extends AbstractTest
 {
     use WithFaker;
+    use JobMocker;
 
-    /**
-     * @return void
-     */
     public function testListensToJobProcessingEvent(): void
     {
         Event::fake(JobProcessing::class);
@@ -30,9 +29,6 @@ class SetCorrelationIdTest extends AbstractTest
         );
     }
 
-    /**
-     * @return void
-     */
     public function testReturnsEarlyWhenJobsDontHaveTrait(): void
     {
         /** @var MockInterface|Job $jobMock */
@@ -49,30 +45,18 @@ class SetCorrelationIdTest extends AbstractTest
     }
 
     /**
-     * @return void
+     * @dataProvider getCorrelationIdJobTestDataProvider
      */
-    public function testSetsCorrelationIdWhenJobsHaveTrait()
+    public function testSetsCorrelationIdWhenJobsHaveTrait(bool $isJobEncrypted): void
     {
-        /** @var MockInterface|Job $jobMock */
-        $jobMock       = $this->mock(Job::class);
         $correlationId = $this->faker->uuid;
         $command       = new CommandWithTraitStub();
 
         $command->setCorrelationId($correlationId);
 
-        $jobMock->shouldReceive('resolveName')
-            ->once()
-            ->andReturn($command);
-
-        $jobMock->shouldReceive('payload')
-            ->once()
-            ->andReturn([
-                'data' => [
-                    'command' => serialize($command),
-                ],
-            ]);
-
-        $this->runListener($jobMock);
+        $this->runListener(
+            $this->mockJob($command, $isJobEncrypted)
+        );
 
         $this->assertSame(
             $correlationId,
@@ -80,11 +64,15 @@ class SetCorrelationIdTest extends AbstractTest
         );
     }
 
-    /**
-     * @param MockInterface|Job $jobMock
-     * @return void
-     */
-    private function runListener(MockInterface|Job $jobMock): void
+    public static function getCorrelationIdJobTestDataProvider(): array
+    {
+        return  [
+            'Encrypted'     => [true],
+            'Not encrypted' => [false],
+        ];
+    }
+
+    private function runListener(Job $jobMock): void
     {
         $event = new JobProcessing(
             $this->faker->word,

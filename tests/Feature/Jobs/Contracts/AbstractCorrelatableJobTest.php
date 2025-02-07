@@ -8,9 +8,6 @@ use LaravelCorrelationId\Tests\AbstractTest;
 
 class AbstractCorrelatableJobTest extends AbstractTest
 {
-    /**
-     * @return void
-     */
     public function testIncludesTrait(): void
     {
         $job = new class extends AbstractCorrelatableJob{

@@ -17,4 +17,7 @@
             <directory suffix=".php">./src/config</directory>
         </exclude>
     </coverage>
+    <php>
+        <env name="APP_KEY" value="base64:PDMYBPV/GSE/Ccjj8Kh/oPVljLTNk9ysMw/jD/z0VcE="/>
+    </php>
 </phpunit>

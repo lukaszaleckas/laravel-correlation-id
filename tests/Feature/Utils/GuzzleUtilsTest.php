@@ -14,9 +14,6 @@ class GuzzleUtilsTest extends AbstractTest
 {
     use WithFaker;
 
-    /**
-     * @return void
-     */
     public function testReturnsHandlerStackInstance(): void
     {
         $this->assertInstanceOf(
@@ -25,17 +22,11 @@ class GuzzleUtilsTest extends AbstractTest
         );
     }
 
-    /**
-     * @return void
-     */
     public function testGetMiddlewareReturnsCallable(): void
     {
         $this->assertIsCallable(GuzzleUtils::getMiddleware());
     }
 
-    /**
-     * @return void
-     */
     public function testMiddlewareAddsCorrelationIdHeader(): void
     {
         $correlationId        = $this->faker->uuid;

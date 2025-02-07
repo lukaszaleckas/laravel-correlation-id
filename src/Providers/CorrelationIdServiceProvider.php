@@ -13,10 +13,6 @@ use LaravelCorrelationId\Listeners\SetCorrelationId;
 
 class CorrelationIdServiceProvider extends ServiceProvider
 {
-    /**
-     * @param Kernel $kernel
-     * @return void
-     */
     public function boot(Kernel $kernel): void
     {
         $this->publishes([
@@ -27,9 +23,6 @@ class CorrelationIdServiceProvider extends ServiceProvider
         $this->prepareEventListeners();
     }
 
-    /**
-     * @return void
-     */
     public function register(): void
     {
         $this->app->scoped(CorrelationIdService::class);
@@ -41,10 +34,6 @@ class CorrelationIdServiceProvider extends ServiceProvider
         );
     }
 
-    /**
-     * @param Kernel $kernel
-     * @return void
-     */
     private function pushGlobalMiddleware(Kernel $kernel): void
     {
         if (!$this->shouldIncludeRouteMiddleware()) {
@@ -54,17 +43,11 @@ class CorrelationIdServiceProvider extends ServiceProvider
         $kernel->pushMiddleware(CorrelationIdMiddleware::class);
     }
 
-    /**
-     * @return void
-     */
     private function prepareEventListeners(): void
     {
         Queue::before(SetCorrelationId::class);
     }
 
-    /**
-     * @return bool
-     */
     private function shouldIncludeRouteMiddleware(): bool
     {
         return config('correlation_id.include_route_middleware') ?? true;

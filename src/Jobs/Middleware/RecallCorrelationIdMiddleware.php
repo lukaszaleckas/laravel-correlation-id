@@ -13,19 +13,11 @@ class RecallCorrelationIdMiddleware
     /** @var CorrelationIdService */
     private CorrelationIdService $correlationIdService;
 
-    /**
-     * @param CorrelationIdService $correlationIdService
-     */
     public function __construct(CorrelationIdService $correlationIdService)
     {
         $this->correlationIdService = $correlationIdService;
     }
 
-    /**
-     * @param mixed $job
-     * @param mixed $next
-     * @return mixed
-     */
     public function handle(mixed $job, mixed $next): mixed
     {
         if ($job instanceof AbstractCorrelatableJob) {

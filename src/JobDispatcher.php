@@ -9,9 +9,6 @@ use LaravelCorrelationId\Utils\Helpers;
 
 class JobDispatcher extends Dispatcher
 {
-    /**
-     * @param Dispatcher $dispatcher
-     */
     public function __construct(Dispatcher $dispatcher)
     {
         parent::__construct($dispatcher->container, $dispatcher->queueResolver);

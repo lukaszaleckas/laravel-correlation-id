@@ -19,9 +19,6 @@ class CorrelationIdService
     /** @var string */
     private string $httpHeaderName;
 
-    /**
-     * @return void
-     */
     public function __construct()
     {
         $this->currentCorrelationId = null;
@@ -29,17 +26,11 @@ class CorrelationIdService
         $this->httpHeaderName       = config('correlation_id.header_name', self::DEFAULT_HTTP_HEADER_NAME);
     }
 
-    /**
-     * @return string
-     */
     public function generateCorrelationId(): string
     {
         return Str::orderedUuid()->toString();
     }
 
-    /**
-     * @return string|null
-     */
     public function getCurrentCorrelationId(): ?string
     {
         if ($this->currentCorrelationId === null) {
@@ -51,10 +42,6 @@ class CorrelationIdService
         return $this->currentCorrelationId;
     }
 
-    /**
-     * @param string|null $currentCorrelationId
-     * @return void
-     */
     public function setCurrentCorrelationId(?string $currentCorrelationId): void
     {
         $this->currentCorrelationId = $currentCorrelationId;
@@ -62,25 +49,16 @@ class CorrelationIdService
         $this->updateLogContext();
     }
 
-    /**
-     * @return string
-     */
     public function getLogContextKey(): string
     {
         return $this->logContextKey;
     }
 
-    /**
-     * @return string
-     */
     public function getHttpHeaderName(): string
     {
         return $this->httpHeaderName;
     }
 
-    /**
-     * @return void
-     */
     private function updateLogContext(): void
     {
         Log::withContext([

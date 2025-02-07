@@ -8,9 +8,6 @@ use LaravelCorrelationId\Tests\AbstractTest;
 
 class CorrelationIdServiceTest extends AbstractTest
 {
-    /**
-     * @return void
-     */
     public function testGetCurrentCorrelationIdSetsRandomCorrelationIdWhenItIsNull(): void
     {
         $correlationIdService = App::make(CorrelationIdService::class);
