@@ -11,9 +11,6 @@ use Psr\Http\Message\RequestInterface;
 
 class GuzzleUtils
 {
-    /**
-     * @return HandlerStack
-     */
     public static function getHandlerStack(): HandlerStack
     {
         $stack = HandlerStack::create();
@@ -23,9 +20,6 @@ class GuzzleUtils
         return $stack;
     }
 
-    /**
-     * @return Closure
-     */
     public static function getMiddleware(): Closure
     {
         $correlationIdService = App::make(CorrelationIdService::class);

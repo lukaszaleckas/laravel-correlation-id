@@ -19,9 +19,6 @@ class RecallCorrelationIdMiddlewareTest extends AbstractTest
     /** @var AbstractCorrelatableJob */
     private $job;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();

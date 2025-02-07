@@ -11,9 +11,6 @@ class CorrelationIdMiddleware
     /** @var CorrelationIdService */
     private $correlationIdService;
 
-    /**
-     * @param CorrelationIdService $correlationIdService
-     */
     public function __construct(CorrelationIdService $correlationIdService)
     {
         $this->correlationIdService = $correlationIdService;
@@ -31,7 +28,7 @@ class CorrelationIdMiddleware
         if (!$request->hasHeader($headerName)) {
             $request->headers->set($headerName, $this->correlationIdService->generateCorrelationId());
         }
-        
+
         $currentCorrelationId = $request->headers->get($headerName);
         $this->correlationIdService->setCurrentCorrelationId($currentCorrelationId);
 

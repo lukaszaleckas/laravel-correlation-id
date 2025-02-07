@@ -20,9 +20,6 @@ class JobDispatcherTest extends AbstractTest
     /** @var AbstractCorrelatableJob */
     private $job;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,9 +41,6 @@ class JobDispatcherTest extends AbstractTest
         );
     }
 
-    /**
-     * @return void
-     */
     public function testSetsJobCorrelationIdOnDispatch(): void
     {
         $this->jobDispatcher->dispatch($this->job);
@@ -67,9 +61,6 @@ class JobDispatcherTest extends AbstractTest
         $this->assertCorrelationIdWasSet();
     }
 
-    /**
-     * @return void
-     */
     public function testSetsJobCorrelationIdOnSynchronousDispatch(): void
     {
         $this->jobDispatcher->dispatchSync($this->job);
@@ -88,9 +79,6 @@ class JobDispatcherTest extends AbstractTest
         $this->assertCorrelationIdWasSet();
     }
 
-    /**
-     * @return void
-     */
     public function testRefreshesServiceAfterFlushingScopedInstances(): void
     {
         $this->app->forgetScopedInstances();
@@ -110,9 +98,6 @@ class JobDispatcherTest extends AbstractTest
         );
     }
 
-    /**
-     * @return void
-     */
     private function assertCorrelationIdWasSet(): void
     {
         self::assertEquals(
